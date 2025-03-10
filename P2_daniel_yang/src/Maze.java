@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Maze {
 
-    static final boolean TEXT_BASED = false, COORDINATE_BASED = true;
+    public static final boolean TEXT_BASED = false, COORDINATE_BASED = true;
 
     private int width, height, numberOfLevels;
     private char maze[][][];
@@ -58,14 +58,14 @@ public class Maze {
         return maze;
     }
 
-    public Maze(PrintStream output) {
+    public void print(PrintStream output, boolean format) {
 
-        for(char[][] : maze)
-        {
-            
+        output.printf("%d %d %d\n", width, height, numberOfLevels);
+
+        if (format == TEXT_BASED) {
+            for(char level[][] : maze)
+                for(char row[] : level)
+                    output.println(row);
         }
-        output.print(maze[1][2]);
-
-
     }
 }
