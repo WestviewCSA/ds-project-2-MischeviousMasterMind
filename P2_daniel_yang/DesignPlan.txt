@@ -1,0 +1,7 @@
+Design Plan - P3
+Due: 3/12/25 11:59 PM
+
+After reading the specs, start populating a list of things you think you might have to do to finish this project.
+
+1. Read the specifications - understand the problem
+2. Understand map-based input files
