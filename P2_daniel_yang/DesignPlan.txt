@@ -5,3 +5,4 @@ After reading the specs, start populating a list of things you think you might h
 
 1. Read the specifications - understand the problem
 2. Understand map-based input files
+3. Add I/O functionality (reading a maze and storing its values in an object, then printing it out to a seperate file)
