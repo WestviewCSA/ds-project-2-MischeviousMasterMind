@@ -40,6 +40,7 @@ public class Maze {
         height = input.nextInt();
         width = input.nextInt();
         numberOfLevels = input.nextInt();
+        input.nextLine();
 
         maze = new char[numberOfLevels][height][width];
 
@@ -48,7 +49,7 @@ public class Maze {
             for (int i = 0; i < numberOfLevels; i++) {
                 for (int ii = 0; ii < height; ii++) {
 
-                    String row = input.next();
+                    String row = input.nextLine();
                     int j = 0;
 
                     for (int iii = 0; iii < width; iii++) {
