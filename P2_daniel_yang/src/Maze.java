@@ -1,7 +1,9 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Maze {
@@ -28,14 +30,12 @@ public class Maze {
         this.maze = maze;
     }
 
-    public Maze(File inputFile, boolean format) throws FileNotFoundException {
+    public Maze(File inputFile, boolean format) throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException {
 
-        Scanner input = new Scanner(inputFile);
-        readFile(input, format);
-        input.close();
+        read(inputFile, format);
     }
 
-    public char[][][] readFile(Scanner input, boolean format) {
+    public char[][][] read(Scanner input, boolean format) throws IncompleteMapException, IncorrectMapFormatException {
 
         height = input.nextInt();
         width = input.nextInt();
@@ -49,10 +49,14 @@ public class Maze {
             for (int i = 0; i < numberOfLevels; i++) {
                 for (int ii = 0; ii < height; ii++) {
 
+                    if(!input.hasNextLine()) throw new IncompleteMapException("not enough rows");
+
                     String row = input.nextLine();
                     int j = 0;
 
                     for (int iii = 0; iii < width; iii++) {
+
+                        if(j >= row.length()) throw new IncompleteMapException("not enough valid characters in the row");
 
                         while (!isValidTile(row.charAt(j))) {
                             j++;
@@ -79,13 +83,34 @@ public class Maze {
             while (input.hasNext()) {
 
                 char tile = input.next().charAt(0);
-                int row = input.nextInt();
-                int column = input.nextInt();
-                int level = input.nextInt();
 
-                maze[level][row][column] = tile;
+                if (isValidTile(tile)) {
+
+                    try {
+
+                        int row = input.nextInt();
+                        int column = input.nextInt();
+                        int level = input.nextInt();
+                        maze[level][row][column] = tile;
+
+                    } catch (InputMismatchException e) {
+                        throw new IncorrectMapFormatException("location(s) of map element missing");
+                    }
+                } else {
+
+                    input.nextLine();
+                }
             }
         }
+
+        return maze;
+    }
+
+    public char[][][] read(File inputFile, boolean format)  throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException {
+
+        Scanner input = new Scanner(inputFile);
+        read(input, format);
+        input.close();
 
         return maze;
     }
@@ -121,5 +146,19 @@ public class Maze {
             }
 
         }
+    }
+
+    public void print(File outputFile, boolean format) throws FileNotFoundException {
+
+        PrintStream output = new PrintStream(outputFile);
+        print(output, format);
+        output.close();
+    }
+
+    public void print(OutputStream outputStream, boolean format) throws FileNotFoundException {
+
+        PrintStream output = new PrintStream(outputStream);
+        print(output, format);
+        output.close();
     }
 }
