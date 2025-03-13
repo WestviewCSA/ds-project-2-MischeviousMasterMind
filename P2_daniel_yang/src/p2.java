@@ -12,7 +12,6 @@ public class p2 {
     private static Flag flag;
     private static File inputFile;
     private static boolean inputFormat, outputFormat;
-    private static Maze maze;
 
     /**
      *
@@ -24,24 +23,35 @@ public class p2 {
      */
     public static void main(String[] args) throws IncompleteMapException, IncompleteMapException, IncorrectMapFormatException, IllegalCommandLineInputsException, IllegalMapCharacterException {
 
+        char[][][] maze = null;
+
         try {
 
             readArguments(args);
 
         } catch (IllegalCommandLineInputsException e) {
-            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+            System.err.println("Caused by: " + e.getClass().getName());
             System.exit(-1);
         }
 
         try {
 
-            maze = new Maze(inputFile, inputFormat);
+            maze = Maze.read(inputFile, inputFormat);
 
         } catch (FileNotFoundException | IncompleteMapException | IncorrectMapFormatException e) {
-            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+            System.err.println("Caused by: " + e.getClass().getName());
+            System.exit(-1);
         }
 
-        maze.print(System.out, outputFormat);
+        long startTime = System.nanoTime();
+        PathFinder.solve(maze);
+        long endTime = System.nanoTime();
+
+        Maze.print(maze, System.out, outputFormat);
+        System.out.println();
+        System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
     }
 
     private static void readArguments(String[] args) throws IllegalCommandLineInputsException {

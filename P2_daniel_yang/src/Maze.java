@@ -12,15 +12,6 @@ public class Maze {
     private int width, height, numberOfLevels;
     private char maze[][][];
 
-    public Maze(int width, int height, int numberOfLevels) {
-
-        this.width = width;
-        this.height = height;
-        this.numberOfLevels = numberOfLevels;
-
-        maze = new char[numberOfLevels][height][width];
-    }
-
     public Maze(char maze[][][]) {
 
         this.width = maze[0][0].length;
@@ -31,10 +22,12 @@ public class Maze {
 
     public Maze(File inputFile, boolean format) throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
-        read(inputFile, format);
+        this(read(inputFile, format));
     }
 
-    public char[][][] read(Scanner input, boolean format) throws IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
+    public static char[][][] read(Scanner input, boolean format) throws IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
+
+        int height, width, numberOfLevels;
 
         try {
 
@@ -52,7 +45,7 @@ public class Maze {
 
         input.nextLine();
 
-        maze = new char[numberOfLevels][height][width];
+        char maze[][][] = new char[numberOfLevels][height][width];
 
         if (format == TEXT_BASED) {
 
@@ -114,22 +107,26 @@ public class Maze {
         return maze;
     }
 
-    public char[][][] read(File inputFile, boolean format)  throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
+    public static char[][][] read(File inputFile, boolean format)  throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
         Scanner input = new Scanner(inputFile);
-        read(input, format);
+        char maze[][][] = read(input, format);
         input.close();
 
         return maze;
     }
 
-    public boolean isValidTile(char tile) {
+    public static boolean isValidTile(char tile) {
         return (tile == '.') || (tile == '@') || (tile == 'w') || (tile == '$') || (tile == '|') || (tile == '+');
     }
 
     public void print(PrintStream output, boolean format) {
+        print(maze, output, format);
+    }
 
-        output.printf("%d %d %d\n", width, height, numberOfLevels);
+    public static void print(char[][][] maze, PrintStream output, boolean format) {
+
+        output.printf("%d %d %d\n", maze.length, maze[0].length, maze[0][0].length);
 
         if (format == TEXT_BASED) {
 
@@ -142,9 +139,9 @@ public class Maze {
 
         if (format == COORDINATE_BASED) {
 
-            for (int i = 0; i < numberOfLevels; i++) {
-                for (int ii = 0; ii < height; ii++) {
-                    for (int iii = 0; iii < width; iii++) {
+            for (int i = 0; i < maze.length; i++) {
+                for (int ii = 0; ii < maze[0].length; ii++) {
+                    for (int iii = 0; iii < maze[0][0].length; iii++) {
 
                         if (maze[i][ii][iii] != '.') {
                             output.printf("%c %d %d %d\n", maze[i][ii][iii], ii, iii, i);
@@ -161,5 +158,9 @@ public class Maze {
         PrintStream output = new PrintStream(outputFile);
         print(output, format);
         output.close();
+    }
+
+    public char[][][] getMaze() {
+        return maze;
     }
 }
