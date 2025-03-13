@@ -92,6 +92,8 @@ public class p2 {
 
         } catch (IllegalCommandLineInputsException e) {
             System.err.println("Error: Legal commandline arguments must include exactly one of --Stack, -- Queue, or --Opt");
+            System.err.println("Caused by: " + e.getClass().getName() + ": " + e.getMessage());
+            
             System.exit(-1);
         }
     }

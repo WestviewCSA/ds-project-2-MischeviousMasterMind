@@ -27,10 +27,12 @@ FINISHED ITEMS:
 2. Understand map-based input files
 3. Add I/O functionality (reading a maze and storing its values in an object, then printing it out to a seperate file)
 4. Add exceptions (IllegalCommandLineInputsException, IllegalMapCharacterException, IncompleteMapException, IncorrectMapFormatException)
+5. Find places to throw exceptions
+
+IN-PROGRESS:
+- Start working on a PathFinder class that takes in Maze objects and returns a 3D char array with the solution path
 
 TO-DO LIST (in order of priority):
-- Find places to throw exceptions (nearly finished)
-- Start working on a PathFinder class that takes in Maze objects and returns a 3D char array with the solution path
 - Modify the Maze class to support the output formats of the solution path
 - Implement the Stack based approach to the PathFinder class
 - Implement the Queue based approach to the PathFinder class

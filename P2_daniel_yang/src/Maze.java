@@ -59,11 +59,11 @@ public class Maze {
             for (int i = 0; i < numberOfLevels; i++) {
                 for (int ii = 0; ii < height; ii++) {
 
-                    if(!input.hasNextLine()) throw new IncompleteMapException("not enough rows");
+                    if(!input.hasNextLine()) throw new IncompleteMapException("map does not have enough rows specified");
 
                     String row = input.nextLine();
 
-                    if(width > row.length()) throw new IncompleteMapException("row " + i * ii + " does not have enough characters");
+                    if(width > row.length()) throw new IncompleteMapException("row " + (i * ii + 1) + " does not have enough characters for the number of columns specified");
 
                     for (int iii = 0; iii < width; iii++) {
 
@@ -89,21 +89,24 @@ public class Maze {
 
                 char tile = input.next().charAt(0);
 
-                if (isValidTile(tile)) {
+                if (!isValidTile(tile)) throw new IllegalMapCharacterException();
 
-                    try {
+                try {
 
-                        int row = input.nextInt();
-                        int column = input.nextInt();
-                        int level = input.nextInt();
-                        maze[level][row][column] = tile;
-
-                    } catch (InputMismatchException e) {
-                        throw new IncorrectMapFormatException("location(s) of map element missing");
-                    }
-                } else {
-
+                    int row = input.nextInt();
+                    int column = input.nextInt();
+                    int level = input.nextInt();
                     input.nextLine();
+
+                    if(row < 0 || row >= height) throw new IncorrectMapFormatException("row coordinate does not fit inside the dimensions of the maze");
+                    if(column < 0 || column >= width) throw new IncorrectMapFormatException("column coordinate does not fit inside the dimensions of the maze");
+                    if(level < 0 || level >= numberOfLevels) throw new IncorrectMapFormatException("level coordinate is outside the levels in the maze");
+
+                    maze[level][row][column] = tile;
+
+                } catch (InputMismatchException e) {
+
+                    throw new IncorrectMapFormatException("location(s) of map element missing");
                 }
             }
         }
