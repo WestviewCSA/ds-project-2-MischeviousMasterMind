@@ -1,7 +1,6 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -116,7 +115,7 @@ public class Maze {
     }
 
     public boolean isValidTile(char tile) {
-        return (tile == '.') || (tile == '@') || (tile == 'w') || (tile == '$') || (tile == '|');
+        return (tile == '.') || (tile == '@') || (tile == 'w') || (tile == '$') || (tile == '|') || (tile == '+');
     }
 
     public void print(PrintStream output, boolean format) {
@@ -151,13 +150,6 @@ public class Maze {
     public void print(File outputFile, boolean format) throws FileNotFoundException {
 
         PrintStream output = new PrintStream(outputFile);
-        print(output, format);
-        output.close();
-    }
-
-    public void print(OutputStream outputStream, boolean format) throws FileNotFoundException {
-
-        PrintStream output = new PrintStream(outputStream);
         print(output, format);
         output.close();
     }
