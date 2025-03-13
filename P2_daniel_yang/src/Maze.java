@@ -29,16 +29,27 @@ public class Maze {
         this.maze = maze;
     }
 
-    public Maze(File inputFile, boolean format) throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException {
+    public Maze(File inputFile, boolean format) throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
         read(inputFile, format);
     }
 
-    public char[][][] read(Scanner input, boolean format) throws IncompleteMapException, IncorrectMapFormatException {
+    public char[][][] read(Scanner input, boolean format) throws IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
-        height = input.nextInt();
-        width = input.nextInt();
-        numberOfLevels = input.nextInt();
+        try {
+
+            height = input.nextInt();
+            width = input.nextInt();
+            numberOfLevels = input.nextInt();
+            
+        } catch (InputMismatchException e) {
+            throw new IncorrectMapFormatException("height, width, and/or number of levels of this map must be included in the first line as three positive nonzero integers");
+        }
+
+        if(height <= 0) throw new IncorrectMapFormatException("the height must be a positive nonzero integer");
+        if(width <= 0) throw new IncorrectMapFormatException("the width must be a positive nonzero integer");
+        if(numberOfLevels <= 0) throw new IncorrectMapFormatException("the number of levels must be a positive nonzero integer");
+
         input.nextLine();
 
         maze = new char[numberOfLevels][height][width];
@@ -51,19 +62,14 @@ public class Maze {
                     if(!input.hasNextLine()) throw new IncompleteMapException("not enough rows");
 
                     String row = input.nextLine();
-                    int j = 0;
+
+                    if(width > row.length()) throw new IncompleteMapException("row " + i * ii + " does not have enough characters");
 
                     for (int iii = 0; iii < width; iii++) {
 
-                        if(j >= row.length()) throw new IncompleteMapException("not enough valid characters in the row");
+                        if(!isValidTile(row.charAt(iii))) throw new IllegalMapCharacterException();
 
-                        while (!isValidTile(row.charAt(j))) {
-                            j++;
-                        }
-
-                        maze[i][ii][iii] = row.charAt(j);
-
-                        j++;
+                        maze[i][ii][iii] = row.charAt(iii);
                     }
                 }
             }
@@ -105,7 +111,7 @@ public class Maze {
         return maze;
     }
 
-    public char[][][] read(File inputFile, boolean format)  throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException {
+    public char[][][] read(File inputFile, boolean format)  throws FileNotFoundException, IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
         Scanner input = new Scanner(inputFile);
         read(input, format);

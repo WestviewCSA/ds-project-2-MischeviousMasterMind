@@ -10,7 +10,7 @@ public class p2 {
     }
 
     private static Flag flag;
-    private static File inputFile, outputFile;
+    private static File inputFile;
     private static boolean inputFormat, outputFormat;
     private static Maze maze;
 
@@ -22,10 +22,12 @@ public class p2 {
      * @throws IncorrectMapFormatException
      * @throws IllegalCommandLineInputsException
      */
-    public static void main(String[] args) throws IncompleteMapException, IncompleteMapException, IncorrectMapFormatException, IllegalCommandLineInputsException {
+    public static void main(String[] args) throws IncompleteMapException, IncompleteMapException, IncorrectMapFormatException, IllegalCommandLineInputsException, IllegalMapCharacterException {
 
         try {
+
             readArguments(args);
+
         } catch (IllegalCommandLineInputsException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -39,14 +41,7 @@ public class p2 {
             e.printStackTrace();
         }
 
-        try {
-
-            maze.print(outputFile, outputFormat);
-            maze.print(System.out, outputFormat);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        maze.print(System.out, outputFormat);
     }
 
     private static void readArguments(String[] args) throws IllegalCommandLineInputsException {
@@ -60,6 +55,8 @@ public class p2 {
             printUsage(System.out);
             System.exit(0);
         }
+
+        inputFile = new File(args[0]);
 
         int flags = 0;
 
@@ -75,29 +72,27 @@ public class p2 {
             flags += 4;
         }
 
-        switch (flags) {
-
-            case 0 ->
-                throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
-
-            case 1 ->
-                flag = Flag.STACK;
-            case 2 ->
-                flag = Flag.QUEUE;
-            case 4 ->
-                flag = Flag.OPT;
-
-            default ->
-                throw new IllegalCommandLineInputsException("cannot have multiple flags set on (use only either --Stack, --Queue, or --Opt)");
-        }
-
         try {
 
-            inputFile = new File(args[args.length - 1]);
+            switch (flags) {
 
-        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+                case 0 ->
+                    throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
 
-            throw new IllegalCommandLineInputsException("must provide a map input file in the arguments");
+                case 1 ->
+                    flag = Flag.STACK;
+                case 2 ->
+                    flag = Flag.QUEUE;
+                case 4 ->
+                    flag = Flag.OPT;
+
+                default ->
+                    throw new IllegalCommandLineInputsException("cannot have multiple flags set on (use only either --Stack, --Queue, or --Opt)");
+            }
+
+        } catch (IllegalCommandLineInputsException e) {
+            System.err.println("Error: Legal commandline arguments must include exactly one of --Stack, -- Queue, or --Opt");
+            System.exit(-1);
         }
     }
 
@@ -121,9 +116,13 @@ public class p2 {
      */
     private static void printUsage(PrintStream output) {
 
-        output.println("Usage: java p3 [options] <--Stack|--Queue|--Opt> <inputfile>");
+        output.println("Usage: java p3 <inputfile> [options] <--Stack|--Queue|--Opt> [options]");
         output.println();
-        output.println("where options include:");
+        output.println(" <inputfile> is the path to the input map file used by the program and");
+        output.println(" --Stack, --Queue, and --Opt are the approaches the program will use to");
+        output.println(" solve the maze. Only one of these flags can be enabled.");
+        output.println();
+        output.println(" where options include:");
         output.println();
         output.println("    --Help");
         output.println("                print this help message to the output stream");
