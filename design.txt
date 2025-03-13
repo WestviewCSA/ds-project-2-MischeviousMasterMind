@@ -1,6 +1,27 @@
 Design Plan - P3
 Due: 3/12/25 11:59 PM
 
+PROMPT:
+Wolverine is on a mission to find the legendary Diamond Wolverine Coin, rumored to possess mystical powers. 
+He feels a personal obligation to locate the diamond and harness its power to aid his ongoing fight against evil 
+and to visit the Wolverine Store. 
+Mr. Remillard, a respected headmaster at the Westview School for Gifted Coders, is the only one who knows the truth - 
+he has hidden the diamond coin deep within a treacherous maze in Torrey Pines State Reserve.
+Wolverine seeks guidance from you, who has warned him of the dangers he will face and offers him tips on how to navigate the maze. 
+Wolverine trusts you and will set out on his journey, prepared for the challenges that lie ahead. As Wolverine delves deeper into the maze, 
+he relies on his heightened senses and sharp claws to avoid the many traps and obstacles that he encounters. With your guidance echoing in his mind, 
+he makes his way closer to the Diamond Wolverine Buck.
+
+STUDENT OBJECTIVE(S):
+- work with the java stack and queue data structures
+- work with classes and 2D/3D arrays
+- implement a provided algorithm per spec in java
+- develop test cases for testing code
+- work with file i/o 
+- develop a solution to a programming challenge/problem in java
+
+===================================================================================================
+
 FINISHED ITEMS:
 1. Read the specifications - understand the problem
 2. Understand map-based input files
@@ -17,4 +38,5 @@ TO-DO LIST (in order of priority):
 - Add support for commandline arguments and finish writing the help message
 - Write tests using JUnit to check if the program's solutions are correct and search for bugs
 - Implement the optimal approach to the PathFinder class
+- Add support for searching multiple Wolverine Bucks
 - Optimize the runtime of all three search algorithms
