@@ -6,6 +6,7 @@ import java.util.Stack;
 public class PathFinder {
 
     private static final int NORTH = 0, SOUTH = 1, EAST = 2, WEST = 3;
+    private static char solution[][][];
 
     private static class Tile {
 
@@ -24,7 +25,9 @@ public class PathFinder {
         }
     }
 
-    public static void solve(char map[][][], Flag approach) {
+    public static char[][][] solve(char map[][][], Flag approach) {
+
+        solution = new char[map.length][map[0].length][map[0][0].length];
 
         switch (approach) {
             case STACK ->
@@ -34,33 +37,23 @@ public class PathFinder {
             case OPT ->
                 solveUsingOpt(map);
         }
+
+        return solution;
     }
 
     private static void solveUsingStack(char map[][][]) {
 
         System.err.println("Not implemented yet!");
         System.exit(-1);
-
-        for (char[][] level : map) {
-
-            for (int i = 0; i < map[0].length; i++) {
-                for (int ii = 0; ii < map[0][0].length; ii++) {
-                    if (level[i][ii] == '.') {
-                        level[i][ii] = '+';
-                    }
-                }
-            }
-
-        }
     }
 
     private static void solveUsingQueue(char map[][][]) {
 
-        for (char[][] level : map) {
+        for (int level = 0; level < map.length; level++) {
 
             Queue<Tile> q = new LinkedList<>();
 
-            q.add(findTile(level, 'W'));
+            q.add(findTile(map[level], 'W'));
 
             boolean found = false;
 
@@ -70,32 +63,33 @@ public class PathFinder {
 
                 for (int direction = NORTH; direction <= WEST && !found; direction++) {
 
-                    Tile adjacent = getAdjacent(level, current, direction);
+                    Tile adjacent = getAdjacent(map[level], current, direction);
 
                     if (adjacent == null) {
                         continue;
                     }
 
-                    if(tileType(level, adjacent, '*')) {
+                    if (tileType(map[level], adjacent, '*')) {
                         continue;
                     }
 
-                    if (tileType(level, adjacent, '$')) {
+                    if (tileType(map[level], adjacent, '$')) {
                         q.clear();
                         q.add(current);
                         found = true;
                     }
 
-                    if (tileType(level, adjacent, '.')) {
+                    if (tileType(map[level], adjacent, '.')) {
                         q.add(adjacent);
-                        level[adjacent.row][adjacent.col] = '*';
+                        solution[level][adjacent.row][adjacent.col] = '*';
                     }
                 }
 
             }
 
-            
         }
+
+        merge(solution, map);
     }
 
     private static void solveUsingOpt(char map[][][]) {
@@ -154,5 +148,18 @@ public class PathFinder {
         }
 
         return adjacentTile;
+    }
+
+    private static void merge(char[][][] solution, char[][][] map) {
+
+        for (int i = 0; i < solution.length; i++) {
+            for (int ii = 0; ii < solution[0].length; ii++) {
+                for (int iii = 0; iii < solution[0][0].length; iii++) {
+                    if (solution[i][ii][iii] == '\0' || solution[i][ii][iii] == '*') {
+                        solution[i][ii][iii] = map[i][ii][iii];
+                    }
+                }
+            }
+        }
     }
 }
