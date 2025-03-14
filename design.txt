@@ -28,6 +28,7 @@ FINISHED ITEMS:
 3. Add I/O functionality (reading a maze and storing its values in an object, then printing it out to a seperate file)
 4. Add exceptions (IllegalCommandLineInputsException, IllegalMapCharacterException, IncompleteMapException, IncorrectMapFormatException)
 5. Find places to throw exceptions
+6. Work on measuring and reporting runtime for the entire search algorithm
 
 IN-PROGRESS:
 - Start working on a PathFinder class that takes in Maze objects and returns a 3D char array with the solution path
@@ -36,9 +37,9 @@ TO-DO LIST (in order of priority):
 - Modify the Maze class to support the output formats of the solution path
 - Implement the Stack based approach to the PathFinder class
 - Implement the Queue based approach to the PathFinder class
-- Work on measuring and reporting runtime for the entire search algorithm (implemented in the PathFinder class itself)
 - Add support for commandline arguments and finish writing the help message
 - Write tests using JUnit to check if the program's solutions are correct and search for bugs
 - Implement the optimal approach to the PathFinder class
 - Add support for searching multiple Wolverine Bucks
 - Optimize the runtime of all three search algorithms
+- Document all my code

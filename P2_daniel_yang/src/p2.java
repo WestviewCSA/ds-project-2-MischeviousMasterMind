@@ -5,13 +5,10 @@ import java.io.PrintStream;
 
 public class p2 {
 
-    public static enum Flag {
-        STACK, QUEUE, OPT
-    }
-
-    private static Flag flag;
+    private static Flag approach;
     private static File inputFile;
     private static boolean inputFormat, outputFormat;
+    private static char[][][] maze;
 
     /**
      *
@@ -22,8 +19,6 @@ public class p2 {
      * @throws IllegalCommandLineInputsException
      */
     public static void main(String[] args) throws IncompleteMapException, IncompleteMapException, IncorrectMapFormatException, IllegalCommandLineInputsException, IllegalMapCharacterException {
-
-        char[][][] maze = null;
 
         try {
 
@@ -37,7 +32,7 @@ public class p2 {
 
         try {
 
-            maze = Maze.read(inputFile, inputFormat);
+            maze = MazeMaker.read(inputFile, inputFormat);
 
         } catch (FileNotFoundException | IncompleteMapException | IncorrectMapFormatException e) {
             System.err.println("Error: " + e.getMessage());
@@ -46,10 +41,10 @@ public class p2 {
         }
 
         long startTime = System.nanoTime();
-        PathFinder.solve(maze);
+        PathFinder.solve(maze, approach);
         long endTime = System.nanoTime();
 
-        Maze.print(maze, System.out, outputFormat);
+        MazeMaker.print(maze, System.out, outputFormat);
         System.out.println();
         System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
     }
@@ -90,11 +85,11 @@ public class p2 {
                     throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
 
                 case 1 ->
-                    flag = Flag.STACK;
+                    approach = Flag.STACK;
                 case 2 ->
-                    flag = Flag.QUEUE;
+                    approach = Flag.QUEUE;
                 case 4 ->
-                    flag = Flag.OPT;
+                    approach = Flag.OPT;
 
                 default ->
                     throw new IllegalCommandLineInputsException("cannot have multiple flags set on (use only either --Stack, --Queue, or --Opt)");
