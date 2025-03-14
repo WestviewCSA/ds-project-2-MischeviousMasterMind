@@ -40,12 +40,14 @@ public class p2 {
             System.exit(-1);
         }
 
+        MazeMaker.print(maze, System.out, outputFormat);
+
         long startTime = System.nanoTime();
-        char[][][] solution = PathFinder.solve(maze, approach);
+        PathFinder.solve(maze, approach);
         long endTime = System.nanoTime();
 
         MazeMaker.print(maze, System.out, outputFormat);
-        MazeMaker.print(solution, System.out, outputFormat);
+        
         System.out.println();
         System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
     }

@@ -1,6 +1,4 @@
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
 
 public class PathFinder {
@@ -8,15 +6,13 @@ public class PathFinder {
     private static final int NORTH = 0, SOUTH = 1, EAST = 2, WEST = 3;
     private static char solution[][][];
 
-    private static class Tile {
+    private static class Location {
 
         final int row, col;
-        final char type;
 
-        Tile(int row, int col, char type) {
+        Location(int row, int col) {
             this.row = row;
             this.col = col;
-            this.type = type;
         }
 
         @Override
@@ -25,9 +21,7 @@ public class PathFinder {
         }
     }
 
-    public static char[][][] solve(char map[][][], Flag approach) {
-
-        solution = new char[map.length][map[0].length][map[0][0].length];
+    public static void solve(char map[][][], Flag approach) {
 
         switch (approach) {
             case STACK ->
@@ -37,8 +31,6 @@ public class PathFinder {
             case OPT ->
                 solveUsingOpt(map);
         }
-
-        return solution;
     }
 
     private static void solveUsingStack(char map[][][]) {
@@ -49,6 +41,9 @@ public class PathFinder {
 
     private static void solveUsingQueue(char map[][][]) {
 
+        
+
+        /*
         for (int level = 0; level < map.length; level++) {
 
             Queue<Tile> q = new LinkedList<>();
@@ -90,33 +85,37 @@ public class PathFinder {
             }
 
             current = findTile(map[level], '$');
-            int direction = NORTH;
+            int direction = WEST;
 
             while (true) {
 
-                solution[level][current.row][current.col] = '+';
+                print(solution);
 
                 Tile adjacent = getAdjacent(solution[level], current, direction);
 
+                if (tileType(map[level], adjacent, 'W')) {
+
+                    break;
+                }
+
                 if (tileType(solution[level], adjacent, '*')) {
-                    
+                    current = adjacent;
+                    solution[level][current.row][current.col] = '+';
+                } else {
+
+                    direction--;
+                    if (direction < NORTH) {
+                        direction = WEST;
+                    }
+
                 }
-
-                if(tileType(solution[level], adjacent, '*')) {
-
-                    current = getAdjacent(solution[level], current, direction);
-
-                }
-
-                direction++;
-                if(direction > WEST) direction = NORTH;
 
             }
-
 
         }
 
         merge(solution, map);
+        */
     }
 
     private static void solveUsingOpt(char map[][][]) {
@@ -126,18 +125,18 @@ public class PathFinder {
 
         for (char[][] level : map) {
 
-            Stack<Tile> t = new Stack<>(), explored = new Stack<>();
+            Stack<Location> t = new Stack<>(), explored = new Stack<>();
 
         }
 
     }
 
-    private static Tile findTile(char level[][], char tileType) {
+    private static Location findTile(char level[][], char tileType) {
 
         for (int i = 0; i < level.length; i++) {
             for (int ii = 0; ii < level[0].length; ii++) {
                 if (level[i][ii] == tileType) {
-                    return new Tile(i, ii, tileType);
+                    return new Location(i, ii);
                 }
             }
         }
@@ -145,32 +144,32 @@ public class PathFinder {
         return null;
     }
 
-    private static boolean tileType(char level[][], Tile tile, char type) {
+    private static boolean tileType(char level[][], Location tile, char type) {
 
         return (level[tile.row][tile.col] == type);
     }
 
-    private static Tile getAdjacent(char level[][], Tile tile, int direction) {
+    private static Location getAdjacent(char level[][], Location tile, int direction) {
 
         if (!((0 <= tile.row) && (tile.row < level.length) && (0 <= tile.col) && (tile.col < level[0].length))) {
             return null;
         }
 
-        Tile adjacentTile = null;
+        Location adjacentTile = null;
 
         switch (direction) {
 
             case NORTH ->
-                adjacentTile = new Tile(tile.row - 1, tile.col, level[tile.row - 1][tile.col]);
+                adjacentTile = new Location(tile.row - 1, tile.col);
 
             case SOUTH ->
-                adjacentTile = new Tile(tile.row + 1, tile.col, level[tile.row + 1][tile.col]);
+                adjacentTile = new Location(tile.row + 1, tile.col);
 
             case EAST ->
-                adjacentTile = new Tile(tile.row, tile.col + 1, level[tile.row][tile.col + 1]);
+                adjacentTile = new Location(tile.row, tile.col + 1);
 
             case WEST ->
-                adjacentTile = new Tile(tile.row, tile.col - 1, level[tile.row][tile.col - 1]);
+                adjacentTile = new Location(tile.row, tile.col - 1);
 
         }
 
@@ -182,10 +181,26 @@ public class PathFinder {
         for (int i = 0; i < solution.length; i++) {
             for (int ii = 0; ii < solution[0].length; ii++) {
                 for (int iii = 0; iii < solution[0][0].length; iii++) {
-                    if (solution[i][ii][iii] == '\0') {
-                        solution[i][ii][iii] = ' ';
+                    if (solution[i][ii][iii] == '\0' || solution[i][ii][iii] == '*') {
+                        solution[i][ii][iii] = map[i][ii][iii];
                     }
                 }
+            }
+        }
+    }
+
+    private static void print(char[][][] map) {
+        for (char[][] level : map) {
+            for (char[] row : level) {
+                for (char tile : row) {
+                    if (tile == '\0') {
+                        System.out.print(' ');
+                    } else {
+                        System.out.print(tile);
+                    }
+                }
+
+                System.out.println();
             }
         }
     }
