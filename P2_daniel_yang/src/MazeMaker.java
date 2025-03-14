@@ -125,7 +125,7 @@ public class MazeMaker {
 
     public static void print(char[][][] maze, PrintStream output, boolean format) {
 
-        output.printf("%d %d %d\n", maze.length, maze[0].length, maze[0][0].length);
+        output.printf("%d %d %d\n", maze[0].length, maze[0][0].length, maze.length);
 
         if (format == TEXT_BASED) {
 

@@ -57,9 +57,11 @@ public class PathFinder {
 
             boolean found = false;
 
+            Tile current;
+
             while (!found) {
 
-                Tile current = q.remove();
+                current = q.remove();
 
                 for (int direction = NORTH; direction <= WEST && !found; direction++) {
 
@@ -86,6 +88,37 @@ public class PathFinder {
                 }
 
             }
+
+            found = false;
+            current = findTile(map[level], '$');
+
+            while (!found) {
+
+                solution[level][current.row][current.col] = '+';
+
+                for (int direction = WEST; direction >= NORTH && !found; direction--) {
+
+                    Tile adjacent = getAdjacent(solution[level], current, direction);
+
+                    if (adjacent == null) {
+                        continue;
+                    }
+
+                    if(tileType(solution[level], adjacent, '+')) {
+                        continue;
+                    }
+
+                    if (tileType(map[level], adjacent, 'W')) {
+                        found = true;
+                    }
+
+                    if (tileType(solution[level], adjacent, '*')) {
+                        current = adjacent;
+                    }
+                }
+
+            }
+
 
         }
 
@@ -155,7 +188,7 @@ public class PathFinder {
         for (int i = 0; i < solution.length; i++) {
             for (int ii = 0; ii < solution[0].length; ii++) {
                 for (int iii = 0; iii < solution[0][0].length; iii++) {
-                    if (solution[i][ii][iii] == '\0' || solution[i][ii][iii] == '*') {
+                    if (solution[i][ii][iii] == '\0' || solution[i][ii][iii] == '*' || map[i][ii][iii] == '$') {
                         solution[i][ii][iii] = map[i][ii][iii];
                     }
                 }
