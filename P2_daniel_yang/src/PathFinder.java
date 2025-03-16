@@ -69,29 +69,6 @@ public class PathFinder {
             }
         }
 
-        switch (approach) {
-            case STACK -> {
-                if (!solveUsingDeque(solution, false)) {
-                    return null;
-                }
-            }
-            case QUEUE -> {
-                if (!solveUsingDeque(solution, true)) {
-                    return null;
-                }
-            }
-            case OPT -> {
-                if (!solveUsingOpt(solution)) {
-                    return null;
-                }
-            }
-        }
-
-        return solution;
-    }
-
-    private static boolean solveUsingDeque(char solution[][][], boolean useQueue) {
-
         for (int level = 0; level < solution.length; level++) {
 
             Deque<PathTile> q = new ArrayDeque<>();
@@ -100,20 +77,33 @@ public class PathFinder {
 
             q.add(wolverine);
 
-            PathTile path = searchUsingDeque(solution[level], q, '$', useQueue);
+            PathTile path = null;
+
+            switch(approach) {
+
+                case QUEUE -> path = searchUsingDeque(solution[level], q, '$', true);
+                case STACK -> path = searchUsingDeque(solution[level], q, '$', false);
+                case OPT -> path = searchUsingDepth(solution[level], q, '$');
+            }
 
             if (path == null) {
 
                 if (level == solution.length - 1) {
-                    return false;
+                    return null;
                 }
 
                 q.clear();
                 q.add(wolverine);
-                path = searchUsingDeque(solution[level], q, '|', useQueue);
+
+                switch(approach) {
+
+                    case QUEUE -> path = searchUsingDeque(solution[level], q, '|', true);
+                    case STACK -> path = searchUsingDeque(solution[level], q, '|', false);
+                    case OPT -> path = searchUsingDepth(solution[level], q, '|');
+                }
 
                 if (path == null) {
-                    return false;
+                    return null;
                 }
             }
 
@@ -125,81 +115,7 @@ public class PathFinder {
             }
         }
 
-        return true;
-
-        /*
-        for (int level = 0; level < map.length; level++) {
-
-            Queue<Tile> q = new LinkedList<>();
-
-            q.add(findTile(map[level], 'W'));
-
-            boolean found = false;
-
-            Tile current;
-
-            while (!found) {
-
-                current = q.remove();
-
-                for (int direction = NORTH; direction <= WEST && !found; direction++) {
-
-                    Tile adjacent = getAdjacent(map[level], current, direction);
-
-                    if (adjacent == null) {
-                        continue;
-                    }
-
-                    if (tileType(map[level], adjacent, '*')) {
-                        continue;
-                    }
-
-                    if (tileType(map[level], adjacent, '$')) {
-                        q.clear();
-                        q.add(current);
-                        found = true;
-                    }
-
-                    if (tileType(map[level], adjacent, '.')) {
-                        q.add(adjacent);
-                        solution[level][adjacent.row][adjacent.col] = '*';
-                    }
-                }
-
-            }
-
-            current = findTile(map[level], '$');
-            int direction = WEST;
-
-            while (true) {
-
-                print(solution);
-
-                Tile adjacent = getAdjacent(solution[level], current, direction);
-
-                if (tileType(map[level], adjacent, 'W')) {
-
-                    break;
-                }
-
-                if (tileType(solution[level], adjacent, '*')) {
-                    current = adjacent;
-                    solution[level][current.row][current.col] = '+';
-                } else {
-
-                    direction--;
-                    if (direction < NORTH) {
-                        direction = WEST;
-                    }
-
-                }
-
-            }
-
-        }
-
-        merge(solution, map);
-         */
+        return solution;
     }
 
     private static PathTile searchUsingDeque(char[][] level, Deque<PathTile> q, char type, boolean useQueue) {
@@ -236,45 +152,6 @@ public class PathFinder {
         }
 
         return null;
-    }
-
-    private static boolean solveUsingOpt(char solution[][][]) {
-
-        for (int level = 0; level < solution.length; level++) {
-
-            Deque<PathTile> q = new ArrayDeque<>();
-
-            PathTile wolverine = findTile(solution[level], 'W');
-
-            q.add(wolverine);
-
-            PathTile path = searchUsingDepth(solution[level], q, '$');
-
-            if (path == null) {
-
-                if (level == solution.length - 1) {
-                    return false;
-                }
-
-                q.clear();
-                q.add(wolverine);
-                path = searchUsingDepth(solution[level], q, '|');
-
-                if (path == null) {
-                    return false;
-                }
-            }
-
-            while (path.previous != null) {
-
-                solution[level][path.row][path.col] = '+';
-                path = path.previous;
-            }
-
-        }
-
-        return true;
-
     }
 
     private static PathTile searchUsingDepth(char[][] level, Deque<PathTile> q, char type) {
