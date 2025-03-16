@@ -1,7 +1,6 @@
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class PathFinder {
 
@@ -60,7 +59,7 @@ public class PathFinder {
         }
     }
 
-    public static char[][][] solve(char map[][][], Flag approach) {
+    public static char[][][] solve(char map[][][], Approach approach) {
 
         char solution[][][] = new char[map.length][map[0].length][map[0][0].length];
 
@@ -71,10 +70,13 @@ public class PathFinder {
         }
 
         switch (approach) {
-            case STACK ->
-                solveUsingStack(solution);
+            case STACK -> {
+                if (!solveUsingDeque(solution, false)) {
+                    return null;
+                }
+            }
             case QUEUE -> {
-                if (!solveUsingQueue(solution)) {
+                if (!solveUsingDeque(solution, true)) {
                     return null;
                 }
             }
@@ -85,33 +87,27 @@ public class PathFinder {
         return solution;
     }
 
-    private static void solveUsingStack(char map[][][]) {
-
-        System.err.println("Not implemented yet!");
-        System.exit(-1);
-    }
-
-    private static boolean solveUsingQueue(char solution[][][]) {
+    private static boolean solveUsingDeque(char solution[][][], boolean useQueue) {
 
         for (int level = 0; level < solution.length; level++) {
 
-            Queue<PathTile> q = new LinkedList<>();
+            Deque<PathTile> q = new ArrayDeque<>();
 
             PathTile wolverine = findTile(solution[level], 'W');
 
             q.add(wolverine);
 
-            PathTile path = iterativeSearchUsingQueue(solution[level], q, '$');
+            PathTile path = iterativeSearchUsingDeque(solution[level], q, '$', useQueue);
 
             if (path == null) {
 
-                if(level == solution.length - 1) {
+                if (level == solution.length - 1) {
                     return false;
                 }
 
                 q.clear();
                 q.add(wolverine);
-                path = iterativeSearchUsingQueue(solution[level], q, '|');
+                path = iterativeSearchUsingDeque(solution[level], q, '|', useQueue);
 
                 if (path == null) {
                     return false;
@@ -203,13 +199,15 @@ public class PathFinder {
          */
     }
 
-    private static PathTile iterativeSearchUsingQueue(char[][] level, Queue<PathTile> q, char type) {
+    private static PathTile iterativeSearchUsingDeque(char[][] level, Deque<PathTile> q, char type, boolean useQueue) {
 
         boolean explored[][] = new boolean[level.length][level[0].length];
 
         while (!q.isEmpty()) {
 
-            PathTile current = q.remove();
+            // equivalent to dequeue() or pop()
+            PathTile current = q.removeFirst();
+
             explored[current.row][current.col] = true;
 
             for (int direction = NORTH; direction <= WEST; direction++) {
@@ -223,7 +221,13 @@ public class PathFinder {
                 }
 
                 if (tile == '.' && !explored[adjacent.row][adjacent.col]) {
-                    q.add(adjacent);
+                    if (useQueue) {
+                        // equivalent to queue()
+                        q.addLast(adjacent);
+                    } else {
+                        // equivalent to push()
+                        q.addFirst(adjacent);
+                    }
                 }
             }
         }
@@ -235,12 +239,6 @@ public class PathFinder {
 
         System.err.println("Not implemented yet!");
         System.exit(-1);
-
-        for (char[][] level : map) {
-
-            Stack<PathTile> t = new Stack<>(), explored = new Stack<>();
-
-        }
 
     }
 
@@ -255,66 +253,5 @@ public class PathFinder {
         }
 
         return null;
-    }
-
-    private static boolean tileType(char level[][], PathTile tile, char type) {
-
-        return (level[tile.row][tile.col] == type);
-    }
-
-    private static PathTile getAdjacent(char level[][], PathTile tile, int direction) {
-
-        if (!((0 <= tile.row) && (tile.row < level.length) && (0 <= tile.col) && (tile.col < level[0].length))) {
-            return null;
-        }
-
-        PathTile adjacentTile = null;
-
-        switch (direction) {
-
-            case NORTH ->
-                adjacentTile = new PathTile(tile.row - 1, tile.col);
-
-            case SOUTH ->
-                adjacentTile = new PathTile(tile.row + 1, tile.col);
-
-            case EAST ->
-                adjacentTile = new PathTile(tile.row, tile.col + 1);
-
-            case WEST ->
-                adjacentTile = new PathTile(tile.row, tile.col - 1);
-
-        }
-
-        return adjacentTile;
-    }
-
-    private static void merge(char[][][] solution, char[][][] map) {
-
-        for (int i = 0; i < solution.length; i++) {
-            for (int ii = 0; ii < solution[0].length; ii++) {
-                for (int iii = 0; iii < solution[0][0].length; iii++) {
-                    if (solution[i][ii][iii] == '\0' || solution[i][ii][iii] == '*') {
-                        solution[i][ii][iii] = map[i][ii][iii];
-                    }
-                }
-            }
-        }
-    }
-
-    private static void print(char[][][] map) {
-        for (char[][] level : map) {
-            for (char[] row : level) {
-                for (char tile : row) {
-                    if (tile == '\0') {
-                        System.out.print(' ');
-                    } else {
-                        System.out.print(tile);
-                    }
-                }
-
-                System.out.println();
-            }
-        }
     }
 }
