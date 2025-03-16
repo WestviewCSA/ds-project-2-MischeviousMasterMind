@@ -170,7 +170,7 @@ public class PathFinder {
 
                 char tile = adjacent.charAt(level);
 
-                if(tile == '\0') {
+                if(tile == '\0' || tile == '@') {
                     continue;
                 }
 
