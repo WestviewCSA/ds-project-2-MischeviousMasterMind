@@ -5,7 +5,7 @@ import java.io.PrintStream;
 
 public class p2 {
 
-    private static Flag approach;
+    private static Approach approach;
     private static File inputFile;
     private static boolean inputFormat, outputFormat;
     private static char[][][] maze;
@@ -96,11 +96,11 @@ public class p2 {
                     throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
 
                 case 1 ->
-                    approach = Flag.STACK;
+                    approach = Approach.STACK;
                 case 2 ->
-                    approach = Flag.QUEUE;
+                    approach = Approach.QUEUE;
                 case 4 ->
-                    approach = Flag.OPT;
+                    approach = Approach.OPT;
 
                 default ->
                     throw new IllegalCommandLineInputsException("cannot have multiple flags set on (use only either --Stack, --Queue, or --Opt)");

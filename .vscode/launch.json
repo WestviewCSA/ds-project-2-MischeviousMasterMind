@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "p2",
             "projectName": "P2_daniel_yang",
-            "args" : ["${workspaceFolder}\\P2_daniel_yang\\TEST\\test02", "--Queue"]
+            "args" : ["${workspaceFolder}\\P2_daniel_yang\\TEST\\test03", "--Queue"]
         }
     ]
 }
