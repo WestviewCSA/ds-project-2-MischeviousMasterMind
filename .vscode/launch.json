@@ -12,11 +12,19 @@
         },
         {
             "type": "java",
-            "name": "p2",
+            "name": "Queue",
             "request": "launch",
             "mainClass": "p2",
             "projectName": "P2_daniel_yang",
-            "args" : ["${workspaceFolder}\\P2_daniel_yang\\TEST\\test03", "--Queue"]
+            "args" : ["${file}", "--Queue"]
+        },
+        {
+            "type": "java",
+            "name": "Stack",
+            "request": "launch",
+            "mainClass": "p2",
+            "projectName": "P2_daniel_yang",
+            "args" : ["${file}", "--Stack"]
         }
     ]
 }
