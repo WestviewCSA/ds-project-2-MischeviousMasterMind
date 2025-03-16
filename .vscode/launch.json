@@ -25,6 +25,14 @@
             "mainClass": "p2",
             "projectName": "P2_daniel_yang",
             "args" : ["${file}", "--Stack"]
+        },
+        {
+            "type": "java",
+            "name": "Opt",
+            "request": "launch",
+            "mainClass": "p2",
+            "projectName": "P2_daniel_yang",
+            "args" : ["${file}", "--Opt"]
         }
     ]
 }

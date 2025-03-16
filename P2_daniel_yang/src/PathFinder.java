@@ -80,8 +80,11 @@ public class PathFinder {
                     return null;
                 }
             }
-            case OPT ->
-                solveUsingOpt(solution);
+            case OPT -> {
+                if (!solveUsingOpt(solution)) {
+                    return null;
+                }
+            }
         }
 
         return solution;
@@ -97,7 +100,7 @@ public class PathFinder {
 
             q.add(wolverine);
 
-            PathTile path = iterativeSearchUsingDeque(solution[level], q, '$', useQueue);
+            PathTile path = searchUsingDeque(solution[level], q, '$', useQueue);
 
             if (path == null) {
 
@@ -107,7 +110,7 @@ public class PathFinder {
 
                 q.clear();
                 q.add(wolverine);
-                path = iterativeSearchUsingDeque(solution[level], q, '|', useQueue);
+                path = searchUsingDeque(solution[level], q, '|', useQueue);
 
                 if (path == null) {
                     return false;
@@ -199,7 +202,7 @@ public class PathFinder {
          */
     }
 
-    private static PathTile iterativeSearchUsingDeque(char[][] level, Deque<PathTile> q, char type, boolean useQueue) {
+    private static PathTile searchUsingDeque(char[][] level, Deque<PathTile> q, char type, boolean useQueue) {
 
         boolean explored[][] = new boolean[level.length][level[0].length];
 
@@ -235,11 +238,85 @@ public class PathFinder {
         return null;
     }
 
-    private static void solveUsingOpt(char map[][][]) {
+    private static boolean solveUsingOpt(char solution[][][]) {
 
-        System.err.println("Not implemented yet!");
-        System.exit(-1);
+        for (int level = 0; level < solution.length; level++) {
 
+            Deque<PathTile> q = new ArrayDeque<>();
+
+            PathTile wolverine = findTile(solution[level], 'W');
+
+            q.add(wolverine);
+
+            PathTile path = searchUsingDepth(solution[level], q, '$');
+
+            if (path == null) {
+
+                if (level == solution.length - 1) {
+                    return false;
+                }
+
+                q.clear();
+                q.add(wolverine);
+                path = searchUsingDepth(solution[level], q, '|');
+
+                if (path == null) {
+                    return false;
+                }
+            }
+
+            while (path.previous != null) {
+
+                solution[level][path.row][path.col] = '+';
+                path = path.previous;
+            }
+
+        }
+
+        return true;
+
+    }
+
+    private static PathTile searchUsingDepth(char[][] level, Deque<PathTile> q, char type) {
+
+        int minDepth = Integer.MAX_VALUE;
+        int depth[][] = new int[level.length][level[0].length];
+        PathTile shortestPath = null;
+
+        while (!q.isEmpty()) {
+
+            PathTile current = q.removeFirst();
+
+            for (int direction = NORTH; direction <= WEST; direction++) {
+
+                PathTile adjacent = new PathTile(current, direction);
+
+                char tile = adjacent.charAt(level);
+
+                if(tile == '\0') {
+                    continue;
+                }
+
+                if (tile == type) {
+                    minDepth = depth[current.row][current.col];
+                    shortestPath = current;
+                    break;
+                }
+
+                if (depth[current.row][current.col] >= minDepth) {
+                    break;
+                }
+
+                if (tile == '.' && (depth[adjacent.row][adjacent.col] > depth[current.row][current.col] + 1) || depth[adjacent.row][adjacent.col] == 0) {
+
+                    depth[adjacent.row][adjacent.col] = depth[current.row][current.col] + 1;
+                    q.addFirst(adjacent);
+                }
+            }
+
+        }
+
+        return shortestPath;
     }
 
     private static PathTile findTile(char level[][], char tileType) {
