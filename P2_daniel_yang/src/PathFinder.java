@@ -79,11 +79,14 @@ public class PathFinder {
 
             PathTile path = null;
 
-            switch(approach) {
+            switch (approach) {
 
-                case QUEUE -> path = searchUsingDeque(solution[level], q, '$', true);
-                case STACK -> path = searchUsingDeque(solution[level], q, '$', false);
-                case OPT -> path = searchUsingDepth(solution[level], q, '$');
+                case QUEUE ->
+                    path = searchUsingStack(solution[level], q, '$');
+                case STACK ->
+                    path = searchUsingQueue(solution[level], q, '$');
+                case OPT ->
+                    path = searchUsingDepth(solution[level], q, '$');
             }
 
             if (path == null) {
@@ -95,11 +98,14 @@ public class PathFinder {
                 q.clear();
                 q.add(wolverine);
 
-                switch(approach) {
+                switch (approach) {
 
-                    case QUEUE -> path = searchUsingDeque(solution[level], q, '|', true);
-                    case STACK -> path = searchUsingDeque(solution[level], q, '|', false);
-                    case OPT -> path = searchUsingDepth(solution[level], q, '|');
+                    case QUEUE ->
+                        path = searchUsingStack(solution[level], q, '|');
+                    case STACK ->
+                        path = searchUsingQueue(solution[level], q, '|');
+                    case OPT ->
+                        path = searchUsingDepth(solution[level], q, '|');
                 }
 
                 if (path == null) {
@@ -111,20 +117,19 @@ public class PathFinder {
 
                 solution[level][path.row][path.col] = '+';
                 path = path.previous;
-
             }
         }
 
         return solution;
     }
 
-    private static PathTile searchUsingDeque(char[][] level, Deque<PathTile> q, char type, boolean useQueue) {
+    private static PathTile searchUsingQueue(char[][] level, Deque<PathTile> q, char type) {
 
         boolean explored[][] = new boolean[level.length][level[0].length];
 
         while (!q.isEmpty()) {
 
-            // equivalent to dequeue() or pop()
+            // equivalent to dequeue()
             PathTile current = q.removeFirst();
 
             explored[current.row][current.col] = true;
@@ -135,18 +140,48 @@ public class PathFinder {
 
                 char tile = adjacent.charAt(level);
 
-                if (tile == type) {
+                if (tile == '.') {
+                    if (!explored[adjacent.row][adjacent.col]) {
+                        // equivalent to queue()
+                        q.add(adjacent);
+                    }
+
+                } else if (tile == type) {
+
                     return current;
                 }
+            }
+        }
 
-                if (tile == '.' && !explored[adjacent.row][adjacent.col]) {
-                    if (useQueue) {
-                        // equivalent to queue()
-                        q.addLast(adjacent);
-                    } else {
+        return null;
+    }
+
+    private static PathTile searchUsingStack(char[][] level, Deque<PathTile> q, char type) {
+
+        boolean explored[][] = new boolean[level.length][level[0].length];
+
+        while (!q.isEmpty()) {
+
+            // equivalent to pop()
+            PathTile current = q.removeLast();
+
+            explored[current.row][current.col] = true;
+
+            for (int direction = NORTH; direction <= WEST; direction++) {
+
+                PathTile adjacent = new PathTile(current, direction);
+
+                char tile = adjacent.charAt(level);
+
+                if (tile == '.') {
+                    if (!explored[adjacent.row][adjacent.col]) {
                         // equivalent to push()
-                        q.addFirst(adjacent);
+                        q.add(adjacent);
                     }
+
+                } else if (tile == type) {
+
+                    return current;
                 }
             }
         }
@@ -170,27 +205,35 @@ public class PathFinder {
 
                 char tile = adjacent.charAt(level);
 
-                if(tile == '\0' || tile == '@') {
-                    continue;
-                }
+                if (tile == '.') {
 
-                if (tile == type) {
+                    //
+                    // In general, I hate nesting code. But in this case, it is necessary for two major reasons:
+                    //
+                    // (1) If adjacent tile is out of bounds, then adjacent.row and adjacent.col would also
+                    // be outside the bounds of depth[][]. Putting all the conditions in one statement will 
+                    // then return an error since all three conditions would be checked simultaneously such 
+                    // that even if the adjacent tile is out of bounds, the other two conditions would
+                    // be checked anyways.
+                    //
+                    // (2) It is extremely optimal as if (tile != '.'), then the other two conditions needn't 
+                    // to be checked. The less conditions checked each iteration, the more efficient the program is.
+                    //
+                    if ((depth[current.row][current.col] < minDepth)
+                            && (depth[adjacent.row][adjacent.col] > depth[current.row][current.col] + 1
+                            || depth[adjacent.row][adjacent.col] == 0)) {
+
+                        depth[adjacent.row][adjacent.col] = depth[current.row][current.col] + 1;
+                        q.addFirst(adjacent);
+                    }
+
+                } else if (tile == type) {
+
                     minDepth = depth[current.row][current.col];
                     shortestPath = current;
-                    break;
-                }
 
-                if (depth[current.row][current.col] >= minDepth) {
-                    break;
-                }
-
-                if (tile == '.' && (depth[adjacent.row][adjacent.col] > depth[current.row][current.col] + 1) || depth[adjacent.row][adjacent.col] == 0) {
-
-                    depth[adjacent.row][adjacent.col] = depth[current.row][current.col] + 1;
-                    q.addFirst(adjacent);
                 }
             }
-
         }
 
         return shortestPath;
