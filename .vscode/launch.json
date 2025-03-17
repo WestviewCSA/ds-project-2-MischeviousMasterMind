@@ -12,6 +12,14 @@
         },
         {
             "type": "java",
+            "name": "Help",
+            "request": "launch",
+            "mainClass": "p2",
+            "projectName": "P2_daniel_yang",
+            "args" : ["--Help"]
+        },
+        {
+            "type": "java",
             "name": "Queue",
             "request": "launch",
             "mainClass": "p2",

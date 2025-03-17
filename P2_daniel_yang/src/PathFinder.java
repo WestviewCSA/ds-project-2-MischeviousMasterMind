@@ -59,40 +59,38 @@ public class PathFinder {
         }
     }
 
-    public static char[][][] solve(char map[][][], Approach approach) {
+    public static boolean solve(char map[][][], Approach approach) {
 
-        char solution[][][] = new char[map.length][map[0].length][map[0][0].length];
-
-        for (int i = 0; i < map.length; i++) {
-            for (int ii = 0; ii < map[0].length; ii++) {
-                System.arraycopy(map[i][ii], 0, solution[i][ii], 0, map[0][0].length);
-            }
-        }
-
-        for (int level = 0; level < solution.length; level++) {
+        for (int level = 0; level < map.length; level++) {
 
             Deque<PathTile> q = new ArrayDeque<>();
 
-            PathTile wolverine = findTile(solution[level], 'W');
+            PathTile wolverine = findTile(map[level], 'W');
+
+            if (wolverine == null) {
+                return false;
+            }
 
             q.add(wolverine);
 
             PathTile path = null;
 
-            switch (approach) {
+            if (findTile(map[level], '$') != null) {
 
-                case QUEUE ->
-                    path = searchUsingStack(solution[level], q, '$');
-                case STACK ->
-                    path = searchUsingQueue(solution[level], q, '$');
-                case OPT ->
-                    path = searchUsingDepth(solution[level], q, '$');
+                switch (approach) {
+                    case QUEUE ->
+                        path = searchUsingStack(map[level], q, '$');
+                    case STACK ->
+                        path = searchUsingQueue(map[level], q, '$');
+                    case OPT ->
+                        path = searchUsingDepth(map[level], q, '$');
+                }
             }
 
             if (path == null) {
 
-                if (level == solution.length - 1) {
-                    return null;
+                if (level == map.length - 1 || findTile(map[level], '|') == null) {
+                    return false;
                 }
 
                 q.clear();
@@ -101,26 +99,26 @@ public class PathFinder {
                 switch (approach) {
 
                     case QUEUE ->
-                        path = searchUsingStack(solution[level], q, '|');
+                        path = searchUsingStack(map[level], q, '|');
                     case STACK ->
-                        path = searchUsingQueue(solution[level], q, '|');
+                        path = searchUsingQueue(map[level], q, '|');
                     case OPT ->
-                        path = searchUsingDepth(solution[level], q, '|');
+                        path = searchUsingDepth(map[level], q, '|');
                 }
 
                 if (path == null) {
-                    return null;
+                    return false;
                 }
             }
 
             while (path.previous != null) {
 
-                solution[level][path.row][path.col] = '+';
+                map[level][path.row][path.col] = '+';
                 path = path.previous;
             }
         }
 
-        return solution;
+        return true;
     }
 
     private static PathTile searchUsingQueue(char[][] level, Deque<PathTile> q, char type) {

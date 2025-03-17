@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class MazeMaker {
+public class Maze {
 
     public static final boolean TEXT_BASED = false, COORDINATE_BASED = true;
 
@@ -20,7 +20,7 @@ public class MazeMaker {
             numberOfLevels = input.nextInt();
 
         } catch (InputMismatchException e) {
-            throw new IncorrectMapFormatException("height, width, and/or number of levels of this maze must be included in the first line as three positive nonzero integers");
+            throw new IncorrectMapFormatException("height, width, and number of levels of this maze must be included in the first line as three positive nonzero integers");
         }
 
         if (height <= 0) {
@@ -124,8 +124,6 @@ public class MazeMaker {
     }
 
     public static void print(char[][][] maze, PrintStream output, boolean format) {
-
-        output.printf("%d %d %d\n", maze[0].length, maze[0][0].length, maze.length);
 
         if (format == TEXT_BASED) {
 

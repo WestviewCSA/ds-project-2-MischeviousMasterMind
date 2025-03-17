@@ -7,7 +7,7 @@ public class p2 {
 
     private static Approach approach;
     private static File inputFile;
-    private static boolean inputFormat, outputFormat;
+    private static boolean printTime, inCoordinate, outCoordinate;
     private static char[][][] maze;
 
     /**
@@ -32,7 +32,7 @@ public class p2 {
 
         try {
 
-            maze = MazeMaker.read(inputFile, inputFormat);
+            maze = Maze.read(inputFile, inCoordinate);
 
         } catch (FileNotFoundException | IncompleteMapException | IncorrectMapFormatException e) {
             System.err.println("Error: " + e.getMessage());
@@ -41,33 +41,39 @@ public class p2 {
         }
 
         System.out.println("\n=== Problem ===");
-        MazeMaker.print(maze, System.out, outputFormat);
+        Maze.print(maze, System.out, Maze.TEXT_BASED);
 
         long startTime = System.nanoTime();
-        char[][][] solution = PathFinder.solve(maze, approach);
+        boolean solvable = PathFinder.solve(maze, approach);
         long endTime = System.nanoTime();
 
-        if(solution == null) {
+        if(!solvable) {
 
             System.err.println("The Wolverine Store is closed.");
 
         } else {
+
             System.out.println("\n=== Solution ===");
-            MazeMaker.print(solution, System.out, outputFormat);
+            Maze.print(maze, System.out, outCoordinate);
         }
 
-        System.out.println();
-        System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
+        if(printTime) {
+            System.out.println();
+            System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
+        }
     }
 
     private static void readArguments(String[] args) throws IllegalCommandLineInputsException {
 
         if (args.length == 0) {
+            System.err.println("Error: No arguments provided!");
+            System.err.println();
+
             printUsage(System.err);
             System.exit(-1);
         }
 
-        if (contains(args, "--help")) {
+        if (args[0].equals("--Help")) {
             printUsage(System.out);
             System.exit(0);
         }
@@ -76,52 +82,35 @@ public class p2 {
 
         int flags = 0;
 
-        if (contains(args, "--Stack")) {
-            flags += 1;
-        }
+        for(int i = 1; i < args.length; i++) {
 
-        if (contains(args, "--Queue")) {
-            flags += 2;
-        }
+            switch(args[i]) {
 
-        if (contains(args, "--Opt")) {
-            flags += 4;
-        }
-
-        try {
-
-            switch (flags) {
-
-                case 0 ->
-                    throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
-
-                case 1 ->
-                    approach = Approach.STACK;
-                case 2 ->
-                    approach = Approach.QUEUE;
-                case 4 ->
-                    approach = Approach.OPT;
-
-                default ->
-                    throw new IllegalCommandLineInputsException("cannot have multiple flags set on (use only either --Stack, --Queue, or --Opt)");
-            }
-
-        } catch (IllegalCommandLineInputsException e) {
-            System.err.println("Error: Legal commandline arguments must include exactly one of --Stack, -- Queue, or --Opt");
-            System.err.println("Caused by: " + e.getClass().getName() + ": " + e.getMessage());
-            
-            System.exit(-1);
-        }
-    }
-
-    private static boolean contains(String[] args, String argument) {
-        for (String arg : args) {
-            if (arg.equals(argument)) {
-                return true;
+                case "--Stack" -> flags += 1;
+                case "--Queue" -> flags += 2;
+                case "--Opt" -> flags += 4;
+                case "--Time" -> printTime = true;
+                case "--Incoordinate" -> inCoordinate = true;
+                case "--Outcoordinate" -> outCoordinate = true;
+                default -> throw new IllegalCommandLineInputsException(args[i] + " is not a valid argument");
             }
         }
 
-        return false;
+        switch (flags) {
+
+            case 0 ->
+                throw new IllegalCommandLineInputsException("use either --Stack, --Queue, or --Opt as one of your arguments");
+
+            case 1 ->
+                approach = Approach.STACK;
+            case 2 ->
+                approach = Approach.QUEUE;
+            case 4 ->
+                approach = Approach.OPT;
+
+            default ->
+                throw new IllegalCommandLineInputsException("cannot use multiple approaches (use only either --Stack, --Queue, or --Opt)");
+        }
     }
 
     /**
@@ -134,16 +123,27 @@ public class p2 {
      */
     private static void printUsage(PrintStream output) {
 
-        output.println("Usage: java p3 <inputfile> [options] <--Stack|--Queue|--Opt> [options]");
+        output.println("Usage: java p2 <inputfile> [optional] <--Stack|--Queue|--Opt> [optional]");
         output.println();
-        output.println(" <inputfile> is the path to the input map file used by the program and");
-        output.println(" --Stack, --Queue, and --Opt are the approaches the program will use to");
-        output.println(" solve the maze. Only one of these flags can be enabled.");
+        output.println(" Required arguments:");
         output.println();
-        output.println(" where options include:");
+        output.println("    <inputfile>");
+        output.println("                Path to the input map file used by the program. Must be");
+        output.println("                the first argument inputted to the program.");
+        output.println("    <--Stack|--Queue|--Opt>");
+        output.println("                The approaches the program will use to solve the maze.");
+        output.println("                Exactly one of these flags must be enabled.");
+        output.println();
+        output.println(" Optional arguments (can be included in any order after <inputfile>):");
         output.println();
         output.println("    --Help");
         output.println("                print this help message to the output stream");
+        output.println("    --Incoordinate");
+        output.println("                Set the input format to the coordinate-based format when");
+        output.println("                reading <inputfile>. By default, the text-map format is used.");
+        output.println("    --Outcoordinate");
+        output.println("                Set the output format to the coordinate-based format when");
+        output.println("                printing the solution. By default, the text-map format is used.");
         output.println();
     }
 }
