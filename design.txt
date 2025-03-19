@@ -33,16 +33,16 @@ FINISHED ITEMS:
 8. Implement the Stack based approach to the PathFinder class
 9. Implement the Queue based approach to the PathFinder class
 10. Implement the optimal approach to the PathFinder class
+11. Modify the Maze class to support the output formats of the solution path
+12. Add support for commandline arguments and finish writing the help message
 
 IN-PROGRESS:
-- Modify the Maze class to support the output formats of the solution path
-
-TO-DO LIST (in order of priority):
-- Add support for commandline arguments and finish writing the help message
 - Write tests using JUnit to check if the program's solutions are correct and search for bugs
-- Add support for searching multiple Wolverine Bucks
 - Optimize the runtime of all three search algorithms
 - Document all my code
+
+TO-DO LIST (in order of priority):
+- Add support for searching multiple Wolverine Bucks (Extra Credit)
 
 USEFUL WEBSITE(S):
 - Maze Generator: https://www.dcode.fr/maze-generator

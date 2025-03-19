@@ -23,25 +23,16 @@ public class p2 {
         try {
 
             readArguments(args);
-
-        } catch (IllegalCommandLineInputsException e) {
-            System.err.println("Error: " + e.getMessage());
-            System.err.println("Caused by: " + e.getClass().getName());
-            System.exit(-1);
-        }
-
-        try {
-
             maze = Maze.read(inputFile, inCoordinate);
 
-        } catch (FileNotFoundException | IncompleteMapException | IncorrectMapFormatException e) {
+        } catch (IllegalCommandLineInputsException | FileNotFoundException | IncompleteMapException | IncorrectMapFormatException e) {
             System.err.println("Error: " + e.getMessage());
             System.err.println("Caused by: " + e.getClass().getName());
             System.exit(-1);
         }
 
         System.out.println("\n=== Problem ===");
-        Maze.print(maze, System.out, Maze.TEXT_BASED);
+        Maze.print(maze, System.out, inCoordinate);
 
         long startTime = System.nanoTime();
         boolean solvable = PathFinder.solve(maze, approach);
@@ -59,18 +50,14 @@ public class p2 {
 
         if(printTime) {
             System.out.println();
-            System.out.println("Total Runtime: " + (endTime - startTime) / 1000000000.0 + " seconds");
+            System.out.println("Total Runtime: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
         }
     }
 
     private static void readArguments(String[] args) throws IllegalCommandLineInputsException {
 
         if (args.length == 0) {
-            System.err.println("Error: No arguments provided!");
-            System.err.println();
-
-            printUsage(System.err);
-            System.exit(-1);
+            throw new IllegalCommandLineInputsException("No input arguments given");
         }
 
         if (args[0].equals("--Help")) {
@@ -92,6 +79,7 @@ public class p2 {
                 case "--Time" -> printTime = true;
                 case "--Incoordinate" -> inCoordinate = true;
                 case "--Outcoordinate" -> outCoordinate = true;
+                case "--Help" -> printUsage(System.out);
                 default -> throw new IllegalCommandLineInputsException(args[i] + " is not a valid argument");
             }
         }
@@ -125,16 +113,16 @@ public class p2 {
 
         output.println("Usage: java p2 <inputfile> [optional] <--Stack|--Queue|--Opt> [optional]");
         output.println();
-        output.println(" Required arguments:");
+        output.println(" REQUIRED arguments:");
         output.println();
         output.println("    <inputfile>");
         output.println("                Path to the input map file used by the program. Must be");
         output.println("                the first argument inputted to the program.");
         output.println("    <--Stack|--Queue|--Opt>");
-        output.println("                The approaches the program will use to solve the maze.");
+        output.println("                The approach the program will use to solve the maze.");
         output.println("                Exactly one of these flags must be enabled.");
         output.println();
-        output.println(" Optional arguments (can be included in any order after <inputfile>):");
+        output.println(" OPTIONAL arguments (can be included in any order after <inputfile>):");
         output.println();
         output.println("    --Help");
         output.println("                print this help message to the output stream");
