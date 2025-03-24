@@ -209,12 +209,12 @@ public class PathFinder {
                     // In general, I hate nesting code. But in this case, it is necessary for two major reasons:
                     //
                     // (1) If adjacent tile is out of bounds, then adjacent.row and adjacent.col would also
-                    // be outside the bounds of depth[][]. Putting all the conditions in one statement will 
-                    // then return an error since all three conditions would be checked simultaneously such 
+                    // be outside the bounds of depth[][]. Putting all the conditions in one statement will
+                    // then return an error since all three conditions would be checked simultaneously such
                     // that even if the adjacent tile is out of bounds, the other two conditions would
                     // be checked anyways.
                     //
-                    // (2) It is extremely optimal as if (tile != '.'), then the other two conditions needn't 
+                    // (2) It is extremely optimal as if (tile != '.'), then the other two conditions needn't
                     // to be checked. The less conditions checked each iteration, the more efficient the program is.
                     //
                     if ((depth[current.row][current.col] < minDepth)

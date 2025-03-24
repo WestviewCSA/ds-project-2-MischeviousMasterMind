@@ -1,5 +1,5 @@
 public class IncompleteMapException extends Exception {
-    
+
     public IncompleteMapException() {
         super("Map file is incomplete");
     }

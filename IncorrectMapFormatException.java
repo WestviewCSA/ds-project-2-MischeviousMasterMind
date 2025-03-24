@@ -1,5 +1,5 @@
 public class IncorrectMapFormatException extends Exception{
-    
+
     public IncorrectMapFormatException() {
         super("Map file is incorrectly formatted");
     }
