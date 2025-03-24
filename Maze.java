@@ -156,4 +156,30 @@ public class Maze {
         print(maze, output, format);
         output.close();
     }
+
+    public static void secretFeature(char[][][] maze, PrintStream output) {
+
+        for (char level[][] : maze) {
+            for (char row[] : level) {
+                // output.println(row);
+
+                for(char tile : row) {
+
+                    switch(tile) {
+
+                        default -> output.print(" ");
+                        case '+' -> output.print("█");
+                        case '@' -> output.print("▒");
+                        case 'W' -> output.print("W");
+                        case '$' -> output.print("$");
+                        case '|' -> output.print("|");
+                    }
+
+                }
+
+                output.println();
+            }
+        }
+
+    }
 }

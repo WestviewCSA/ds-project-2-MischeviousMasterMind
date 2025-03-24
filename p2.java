@@ -7,7 +7,7 @@ public class p2 {
 
     private static Approach approach;
     private static File inputFile;
-    private static boolean printTime, inCoordinate, outCoordinate;
+    private static boolean printTime, inCoordinate, outCoordinate, secret;
     private static char[][][] maze;
 
     /**
@@ -46,6 +46,11 @@ public class p2 {
 
             System.out.println("\n=== Solution ===");
             Maze.print(maze, System.out, outCoordinate);
+            System.out.println();
+            
+            if(secret) {
+                Maze.secretFeature(maze, System.out);
+            }
         }
 
         if(printTime) {
@@ -80,6 +85,7 @@ public class p2 {
                 case "--Incoordinate" -> inCoordinate = true;
                 case "--Outcoordinate" -> outCoordinate = true;
                 case "--Help" -> printUsage(System.out);
+                case "--Secret" -> secret = true;
                 default -> throw new IllegalCommandLineInputsException(args[i] + " is not a valid argument");
             }
         }
@@ -132,6 +138,8 @@ public class p2 {
         output.println("    --Outcoordinate");
         output.println("                Set the output format to the coordinate-based format when");
         output.println("                printing the solution. By default, the text-map format is used.");
+        output.println("    --Secret");
+        output.println("                Enter in this argument for a surprise ;)");
         output.println();
     }
 }
