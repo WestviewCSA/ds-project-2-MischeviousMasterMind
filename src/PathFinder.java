@@ -78,9 +78,9 @@ public class PathFinder {
 			if (findTile(map[level], '$') != null) {
 
 				switch (approach) {
-				case QUEUE -> path = searchUsingStack(map[level], q, '$');
-				case STACK -> path = searchUsingQueue(map[level], q, '$');
-				case OPT -> path = searchUsingDepth(map[level], q, '$');
+				case QUEUE 	-> path = searchUsingStack(map[level], q, '$');
+				case STACK 	-> path = searchUsingQueue(map[level], q, '$');
+				case OPT 	-> path = searchUsingDepth(map[level], q, '$');
 				}
 			}
 
@@ -95,9 +95,9 @@ public class PathFinder {
 
 				switch (approach) {
 
-				case QUEUE -> path = searchUsingStack(map[level], q, '|');
-				case STACK -> path = searchUsingQueue(map[level], q, '|');
-				case OPT -> path = searchUsingDepth(map[level], q, '|');
+				case QUEUE 	-> path = searchUsingStack(map[level], q, '|');
+				case STACK 	-> path = searchUsingQueue(map[level], q, '|');
+				case OPT 	-> path = searchUsingDepth(map[level], q, '|');
 				}
 
 				if (path == null) {
@@ -204,19 +204,14 @@ public class PathFinder {
 					// major reasons:
 					//
 					// (1) If adjacent tile is out of bounds, then adjacent.row and adjacent.col
-					// would also
-					// be outside the bounds of depth[][]. Putting all the conditions in one
-					// statement will
-					// then return an error since all three conditions would be checked
-					// simultaneously such
-					// that even if the adjacent tile is out of bounds, the other two conditions
-					// would
-					// be checked anyways.
+					// would also be outside the bounds of depth[][]. Putting all the conditions in
+					// one statement will then return an error since all three conditions would be
+					// checked simultaneously such that even if the adjacent tile is out of bounds,
+					// the other two conditions would be checked anyways.
 					//
 					// (2) It is extremely optimal as if (tile != '.'), then the other two
-					// conditions needn't
-					// to be checked. The less conditions checked each iteration, the more efficient
-					// the program is.
+					// conditions needn't to be checked. The less conditions checked each iteration,
+					// the more efficient the program is.
 					//
 					if ((depth[current.row][current.col] < minDepth)
 							&& (depth[adjacent.row][adjacent.col] > depth[current.row][current.col] + 1

@@ -11,6 +11,11 @@ public class Maze {
 
 	public static char[][][] read(Scanner input, boolean format)
 			throws IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
+		return read(input, format, false);
+	}
+
+	public static char[][][] read(Scanner input, boolean format, boolean isSolution)
+			throws IncompleteMapException, IncorrectMapFormatException, IllegalMapCharacterException {
 
 		int height, width, numberOfLevels;
 
@@ -57,7 +62,7 @@ public class Maze {
 
 					for (int iii = 0; iii < width; iii++) {
 
-						if (!isValidTile(row.charAt(iii))) {
+						if (!isValidTile(row.charAt(iii)) || (row.charAt(iii) == '+' && !isSolution)) {
 							throw new IllegalMapCharacterException();
 						}
 
@@ -81,7 +86,7 @@ public class Maze {
 
 				char tile = input.next().charAt(0);
 
-				if (!isValidTile(tile)) {
+				if (!isValidTile(tile) || (tile == '+' && !isSolution)) {
 					throw new IllegalMapCharacterException();
 				}
 
@@ -118,15 +123,21 @@ public class Maze {
 	public static char[][][] read(File inputFile, boolean format) throws FileNotFoundException, IncompleteMapException,
 			IncorrectMapFormatException, IllegalMapCharacterException {
 
+		return read(inputFile, format, false);
+	}
+
+	public static char[][][] read(File inputFile, boolean format, boolean isSolution) throws FileNotFoundException, IncompleteMapException,
+			IncorrectMapFormatException, IllegalMapCharacterException {
+
 		Scanner input = new Scanner(inputFile);
-		char maze[][][] = read(input, format);
+		char maze[][][] = read(input, format, isSolution);
 		input.close();
 
 		return maze;
 	}
-
+	
 	public static boolean isValidTile(char tile) {
-		return (tile == '.') || (tile == '@') || (tile == 'W') || (tile == '$') || (tile == '|');
+		return (tile == '.') || (tile == '@') || (tile == 'W') || (tile == '$') || (tile == '|') || (tile == '+');
 	}
 
 	public static void print(char[][][] maze, PrintStream output, boolean format) {
