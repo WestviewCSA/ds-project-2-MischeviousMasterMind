@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 class PathFinderTester {
 
 	@Test
-	public void test() {
+	public void test01() {
 
 		assertTrue(true);
 
