@@ -1,3 +1,3 @@
 public enum Approach {
-    STACK, QUEUE, OPT
+	STACK, QUEUE, OPT
 }
