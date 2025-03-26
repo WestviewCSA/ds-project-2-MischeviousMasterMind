@@ -134,7 +134,7 @@ public class PathFinder {
 
 				if (tile == '.') {
 					if (!explored[adjacent.row][adjacent.col]) {
-						// equivalent to queue()
+						// equivalent to enqueue()
 						q.add(adjacent);
 					}
 
