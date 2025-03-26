@@ -51,7 +51,7 @@ class PathFinderTester {
 			for (int ii = 0; ii < array1[i].length; ii++) {
 
 				for (int iii = 0; iii < array1[i][ii].length; iii++) {
-
+ 
 					if (array1[i][ii][iii] != array2[i][ii][ii])
 						return false;
 				}
