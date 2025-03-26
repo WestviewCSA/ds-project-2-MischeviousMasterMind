@@ -8,30 +8,24 @@ import org.junit.jupiter.api.Test;
 class PathFinderTester {
 
 	@Test
-	public void test01() {
+	public void test01() throws FileNotFoundException, IncompleteMapException,
+			IncorrectMapFormatException, IllegalMapCharacterException {
 
-		
-		
-		
-		assertTrue(true);
+		assertTrue(test("TEST/test01/test01", "TEST/test01/test01-queue", Approach.QUEUE));
+		assertTrue(test("TEST/test01/test01", "TEST/test01/test01-stack", Approach.STACK));
+		assertTrue(test("TEST/test01/test01", "TEST/test01/test01-opt", Approach.OPT));
 
 	}
 	
-	private static void test(String testName) {
+	private static boolean test(String inputFile, String solutionFile, Approach approach) throws FileNotFoundException, IncompleteMapException,
+			IncorrectMapFormatException, IllegalMapCharacterException {
+			
+		char[][][] output = Maze.read(new File(inputFile), Maze.TEXT_BASED);
+		char[][][] solution = Maze.read(new File(solutionFile));
 		
-		try {
-			
-			char[][][] input = Maze.read(new File(testName + "/" + testName), Maze.TEXT_BASED);
-			char[][][] output = input;
-			char[][][] solution;
-			
-			PathFinder.solve(output, Approach.STACK);
-			solution = Maze.read(new File(testName + "/" + testName + "-stack"), Maze.TEXT_BASED, true);
-			
-		} catch (FileNotFoundException | IncompleteMapException | IncorrectMapFormatException
-				| IllegalMapCharacterException e) {
-			e.printStackTrace();
-		}
+		PathFinder.solve(output, approach);
+
+		return (output == solution);
 		
 	}
 
