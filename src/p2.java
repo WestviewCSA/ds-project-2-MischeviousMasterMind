@@ -57,7 +57,7 @@ public class p2 {
 
 		if (printTime) {
 			System.out.println();
-			System.out.println("Total Runtime: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
+			System.out.printf("\nTotal Runtime: %.7f seconds\n", (endTime - startTime) / 1_000_000_000.0);
 		}
 	}
 

@@ -40,7 +40,7 @@ class PathFinderTester {
 
         Maze.secretFeature(output, System.out);
 
-        System.out.print("\nTotal time to solve: " + (endTime - startTime) / 1_000_000_000.0 + " seconds");
+        System.out.printf("\nTotal time to solve: %.7f seconds\n", (endTime - startTime) / 1_000_000_000.0);
 
         return equals(output, solution);
     }
