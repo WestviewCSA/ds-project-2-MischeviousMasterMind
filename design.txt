@@ -35,14 +35,15 @@ FINISHED ITEMS:
 10. Implement the optimal approach to the PathFinder class
 11. Modify the Maze class to support the output formats of the solution path
 12. Add support for commandline arguments and finish writing the help message
+13. Document all my code
+14. Add support for searching multiple Wolverine Bucks (Extra Credit)
 
 IN-PROGRESS:
 - Write tests using JUnit to check if the program's solutions are correct and search for bugs
-- Optimize the runtime of all three search algorithms
-- Document all my code
+- Fix extra credit to always have optimal solution (least amount of tiles)
 
 TO-DO LIST (in order of priority):
-- Add support for searching multiple Wolverine Bucks (Extra Credit)
+- NONE!!!
 
 USEFUL WEBSITE(S):
 - Maze Generator: https://www.dcode.fr/maze-generator
